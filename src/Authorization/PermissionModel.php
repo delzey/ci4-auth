@@ -19,7 +19,7 @@ class PermissionModel extends Model
     protected $useTimestamps = false;
 
     protected $validationRules = [
-        'name' => 'required|max_length[255]|lower_alpha_dash_dot|is_unique[auth_permissions.name,name,{name}]',
+        'name' => 'required|max_length[255]|lower_alpha_dash_dot|is_unique[auth_permissions.name,id,{id}]',
         'description' => 'max_length[255]',
     ];
 

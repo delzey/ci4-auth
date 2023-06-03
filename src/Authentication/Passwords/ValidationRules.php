@@ -53,7 +53,7 @@ class ValidationRules
 
         return $result;
     }
-
+    
     /**
      * Specific validator for permission names.
      * Only lower case alpha characters and dots.
@@ -75,7 +75,6 @@ class ValidationRules
 
         return true;
     }
-
     /**
      * Builds a new user instance from the global request.
      *

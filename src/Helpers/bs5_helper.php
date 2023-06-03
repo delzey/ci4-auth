@@ -396,6 +396,8 @@ if (!function_exists('bs5_searchform')) {
      */
     function bs5_searchform($action, $search)
     {
+        helper('form');
+        
         $value = '';
         $disabled = ' disabled';
 
@@ -406,11 +408,11 @@ if (!function_exists('bs5_searchform')) {
 
         $html = '
         <!-- Search Form -->
-        <form class="input-group" name="form_search" action="' . $action . '" method="post">
+        '. form_open($action, ['csrf_id' => 'csrfForm', 'id' => 'data-form', 'class' => 'input-group form-validate', 'name' => 'form_search']) .'
             <input type="text" class="form-control" name="search" placeholder="' . lang('Auth.btn.search') . '..." aria-label="search" aria-describedby="btn_search" value="' . $value . '">
             <button class="btn btn-outline-secondary" type="submit" name="btn_reset" id="btn_reset" title="' . lang('Auth.btn.reset') . '..."' . $disabled . '><i class="bi-backspace-fill text-danger"></i></button>
-            <button class="btn btn-outline-secondary" type="submit" name="btn_search" id="btn_search" title="' . lang('Auth.btn.search') . '..."><i class="bi-search text-primary"></i></button>
-        </form>';
+            <button class="btn btn-outline-secondary" type="submit" name="btn_search" id="btn_search" title="' . lang('Auth.btn.search') . '..."><i class="bi-search text-primary"></i></button>'.
+        form_close();
 
         return $html;
     }

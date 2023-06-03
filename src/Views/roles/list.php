@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="col">
                         <?php if (has_permissions('roles.create')) { ?>
-                            <a href="<?= base_url() ?>/roles/create" class="btn btn-primary"><?= lang('Auth.btn.createRole') ?></a>
+                            <a href="<?= base_url('roles/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createRole') ?></a>
                         <?php } ?>
                     </div>
                     <div class="col">
-                        <?= bs5_searchform(base_url() . '/roles', (isset($search)) ? $search : false) ?>
+                        <?= bs5_searchform(base_url('roles'), (isset($search)) ? $search : false) ?>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
                         <?php foreach ($roles as $role) : ?>
 
-                            <form name="form_<?= $role->id ?>" action="<?= base_url() ?>/roles" method="post">
+                            <form name="form_<?= $role->id ?>" action="<?= base_url('roles') ?>" method="post">
                                 <?= csrf_field() ?>
 
                                 <input name="hidden_id" type="hidden" value="<?= $role->id ?>">

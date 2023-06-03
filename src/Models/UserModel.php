@@ -38,33 +38,33 @@ class UserModel extends Model
     protected $useTimestamps = true;
 
     protected $validationRules = [
-        'email'           => 'required|valid_email|is_unique[users.email,id,{id}]',
-        'username'        => 'required|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
-        'firstname'       => 'max_length[120]',
-        'lastname'        => 'max_length[120]',
-        'displayname'     => 'max_length[120]',
-        'password_hash'   => 'required',
+        'email'           => 'required|trim|valid_email|is_unique[users.email,id,{id}]',
+        'username'        => 'required|trim|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
+        'firstname'       => 'permit_empty|trim|max_length[120]',
+        'lastname'        => 'permit_empty|trim|max_length[120]',
+        'displayname'     => 'permit_empty|trim|max_length[120]',
+        'password_hash'   => 'required|trim',
     ];
 
     protected $validationMessages = [
         'email' => [
             'required' => 'You must enter an email address.',
             'valid_email' => 'Please enter a valid email address.',
-            'is_unique[users.email,email,{$data["name"]}]' => 'This email address is already taken.',
+            'is_unique' => 'This email is too close to another user, please change it.',
         ],
         'username' => [
             'required' => 'You must enter a username.',
-            'max_length[80]' => 'The username cannot be longer than 80 characters.',
-            'is_unique[users.username,username,{$data["username"]}]' => 'This username is already taken.',
+            'max_length' => 'The username cannot be longer than 80 characters.',
+            'is_unique' => 'This username is too close to another user, please change it.',
         ],
         'firstname' => [
-            'max_length[120]' => 'The first name cannot be longer than 120 characters.',
+            'max_length' => 'The first name cannot be longer than 120 characters.',
         ],
         'lastname' => [
-            'max_length[120]' => 'The last name cannot be longer than 120 characters.',
+            'max_length' => 'The last name cannot be longer than 120 characters.',
         ],
         'displayname' => [
-            'max_length[120]' => 'The display name cannot be longer than 120 characters.',
+            'max_length' => 'The display name cannot be longer than 120 characters.',
         ],
     ];
 

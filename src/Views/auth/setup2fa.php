@@ -46,7 +46,7 @@
 
                         <p class="mt-2"><?= lang('Auth.2fa.setup.authenticator_code_desc') ?></p>
 
-                        <form action="<?= base_url() ?>/setup2fa" method="post">
+                        <form action="<?= base_url('setup2fa') ?>" method="post">
                             <?= csrf_field() ?>
 
                             <input name="hidden_secret" type="hidden" value="<?= $secret ?>">
@@ -64,7 +64,7 @@
 
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.verify') ?></button>
-                                <a href="<?= base_url() ?>/" class="btn btn-secondary mt-2"><?= lang('Auth.btn.cancel') ?></a>
+                                <a href="<?= base_url() ?>" class="btn btn-secondary mt-2"><?= lang('Auth.btn.cancel') ?></a>
                             </div>
 
                         </form>

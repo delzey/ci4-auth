@@ -2,13 +2,10 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\Session\Session;
-
-use CI4\Auth\Config\Auth as AuthConfig;
-use CI4\Auth\Authorization\RoleModel;
-
 use App\Controllers\BaseController;
+use CI4\Auth\Authorization\RoleModel;
+use CI4\Auth\Config\Auth as AuthConfig;
+use CodeIgniter\Session\Session;
 
 class RoleController extends BaseController
 {
@@ -18,6 +15,7 @@ class RoleController extends BaseController
      * @var AuthConfig
      */
     protected $config;
+    protected $validation;
 
     /**
      * @var Session
@@ -36,6 +34,7 @@ class RoleController extends BaseController
         $this->session = service('session');
         $this->config = config('Auth');
         $this->auth = service('authorization');
+        $this->validation       = \Config\Services::validation();
     }
 
     // -------------------------------------------------------------------------
@@ -60,7 +59,7 @@ class RoleController extends BaseController
         }
         $data['rolePermissions'] = $rolePermissions;
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->withMethod('post')) {
             //
             // A form was submitted. Let's see what it was...
             //
@@ -171,14 +170,22 @@ class RoleController extends BaseController
         //
         // Validate input
         //
-        $rules = $roles->validationRules;
-        if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        $fields['name']                 = $this->request->getPost('name');
+        $fields['description']          = $this->request->getPost('description');
+
+        $this->validation->setRules([
+            'name'                      => ['label' => 'Name', 'rules'              => 'required|trim|max_length[255]|is_unique[auth_groups.name,id,'.$id.']'],
+            'description'               => ['label' => 'Description', 'rules'       => 'permit_empty|trim|max_length[255]']
+        ]);
 
         //
-        // Save the role
+        // Save the group
         //
-        $res = $this->auth->updateRole($id, $this->request->getPost('name'), $this->request->getPost('description'));
-        if (!$res) return redirect()->back()->withInput()->with('errors', $roles->errors());
+        if ($this->validation->run($fields) == FALSE) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            $this->auth->updateRole($id, $fields['name'], $fields['description']);
+        }
 
         //
         // Save the permissions given to this role.

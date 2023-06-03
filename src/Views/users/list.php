@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="col">
                         <?php if (has_permissions('users.create')) { ?>
-                            <a href="<?= base_url() ?>/users/create" class="btn btn-primary"><?= lang('Auth.btn.createUser') ?></a>
+                            <a href="<?= base_url('users/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createUser') ?></a>
                         <?php } ?>
                     </div>
                     <div class="col">
-                        <?= bs5_searchform(base_url() . '/users', (isset($search)) ? $search : false) ?>
+                        <?= bs5_searchform(base_url('users'), (isset($search)) ? $search : false) ?>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                             $userRoles = $user->getRoles();
                             ?>
 
-                            <form name="form_<?= $user->id ?>" action="<?= base_url() ?>/users" method="post">
+                            <form name="form_<?= $user->id ?>" action="<?= base_url('users') ?>" method="post">
                                 <?= csrf_field() ?>
 
                                 <input name="hidden_id" type="hidden" value="<?= $user->id ?>">

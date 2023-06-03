@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <p><?= lang('Auth.login.enter_code_email_password') ?></p>
 
-                        <form action="<?= base_url() ?>/reset-password" method="post">
+                        <form action="<?= base_url('reset-password') ?>" method="post">
                             <?= csrf_field() ?>
 
                             <div class="mb-3">

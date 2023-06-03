@@ -17,7 +17,7 @@
 
                     <div class="card-body">
 
-                        <form action="<?= base_url() ?>/login2fa" method="post">
+                        <form action="<?= base_url('login2fa') ?>" method="post">
                             <?= csrf_field() ?>
                             <input name="hidden_username" type="hidden" value="<?= $user->username ?>">
 
@@ -33,7 +33,7 @@
 
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary"><?= lang('Auth.2fa.login.pin_login') ?></button>
-                                <a href="<?= base_url() ?>/" class="btn btn-secondary mt-2"><?= lang('Auth.btn.cancel') ?></a>
+                                <a href="<?= base_url() ?>" class="btn btn-secondary mt-2"><?= lang('Auth.btn.cancel') ?></a>
                             </div>
 
                         </form>

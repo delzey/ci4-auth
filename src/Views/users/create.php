@@ -11,7 +11,7 @@
 
             <div class="card-body">
 
-                <form action="<?= base_url() ?>/users/create" method="post">
+                <form action="<?= base_url('users/create') ?>" method="post">
                     <?= csrf_field() ?>
 
                     <?php
@@ -97,7 +97,7 @@
                     <div class="card">
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
-                            <a class="btn btn-secondary float-end" href="<?= base_url() ?>/users"><?= lang('Auth.btn.cancel') ?></a>
+                            <a class="btn btn-secondary float-end" href="<?= base_url('users') ?>"><?= lang('Auth.btn.cancel') ?></a>
                         </div>
                     </div>
 

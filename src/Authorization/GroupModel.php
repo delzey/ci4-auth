@@ -14,17 +14,17 @@ class GroupModel extends Model
     protected $useTimestamps = false;
 
     protected $validationRules = [
-        'name' => 'required|max_length[255]|is_unique[auth_groups.name,name,{name}]',
-        'description' => 'max_length[255]',
+        'name'          => 'required|trim|max_length[255]|is_unique[auth_groups.name,id,{id}]',
+        'description'   => 'max_length[255]',
     ];
     protected $validationMessages = [
         'name' => [
-            'required' => 'You must enter a group name.',
-            'max_length[255]' => 'The name cannot be longer than 255 characters.',
-            'is_unique[auth_groups.name,name,{name}]' => 'The name already exists.',
+            'required'      => 'You must enter a group name.',
+            'max_length'    => 'The name cannot be longer than 255 characters.',
+            'is_unique'     => 'That name already exists.',
         ],
         'description' => [
-            'max_length[255]' => 'The description cannot be longer than 255 characters.',
+            'max_length' => 'The description cannot be longer than 255 characters.',
         ],
     ];
     protected $skipValidation = false;

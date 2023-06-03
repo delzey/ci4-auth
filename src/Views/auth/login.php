@@ -17,7 +17,7 @@
 
                     <div class="card-body">
 
-                        <form action="<?= base_url() ?>/login" method="post">
+                        <form action="<?= base_url('login') ?>" method="post">
                             <?= csrf_field() ?>
 
                             <?php if ($config->validFields === ['email']) : ?>
@@ -65,11 +65,11 @@
                         <hr>
 
                         <?php if ($config->allowRegistration) : ?>
-                            <p><a href="<?= base_url() ?>/register"><?= lang('Auth.login.need_an_account') ?></a></p>
+                            <p><a href="<?= base_url('register') ?>"><?= lang('Auth.login.need_an_account') ?></a></p>
                         <?php endif; ?>
 
                         <?php if ($config->activeResetter) : ?>
-                            <p><a href="<?= base_url() ?>/forgot"><?= lang('Auth.login.forgot_your_password') ?></a></p>
+                            <p><a href="<?= base_url('forgot') ?>"><?= lang('Auth.login.forgot_your_password') ?></a></p>
                         <?php endif; ?>
 
                     </div>

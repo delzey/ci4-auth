@@ -11,7 +11,7 @@
 
             <div class="card-body row">
 
-                <form action="<?= base_url() ?>/permissions/create" method="post">
+                <form action="<?= base_url('permissions/create') ?>" method="post">
                     <?= csrf_field() ?>
 
                     <?php
@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
-                            <a class="btn btn-secondary float-end" href="<?= base_url() ?>/permissions"><?= lang('Auth.btn.cancel') ?></a>
+                            <a class="btn btn-secondary float-end" href="<?= base_url('permissions') ?>"><?= lang('Auth.btn.cancel') ?></a>
                         </div>
                     </div>
 

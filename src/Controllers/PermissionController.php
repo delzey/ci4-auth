@@ -2,13 +2,11 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\Session\Session;
-
-use CI4\Auth\Config\Auth as AuthConfig;
-use CI4\Auth\Authorization\PermissionModel;
 
 use App\Controllers\BaseController;
+use CI4\Auth\Authorization\PermissionModel;
+use CI4\Auth\Config\Auth as AuthConfig;
+use CodeIgniter\Session\Session;
 
 class PermissionController extends BaseController
 {
@@ -18,6 +16,7 @@ class PermissionController extends BaseController
      * @var AuthConfig
      */
     protected $config;
+    protected $validation;
 
     /**
      * @var Session
@@ -32,10 +31,10 @@ class PermissionController extends BaseController
         //
         // Most services in this controller require the session to be started
         //
-        $this->session = service('session');
-
-        $this->config = config('Auth');
-        $this->auth = service('authorization');
+        $this->session          = service('session');
+        $this->config           = config('Auth');
+        $this->auth             = service('authorization');
+        $this->validation       = \Config\Services::validation();
     }
 
     // -------------------------------------------------------------------------
@@ -49,11 +48,11 @@ class PermissionController extends BaseController
         $permissions = model(PermissionModel::class);
 
         $data = [
-            'config' => $this->config,
-            'permissions'  => $permissions->orderBy('name', 'asc')->findAll(),
+            'config'            => $this->config,
+            'permissions'       => $permissions->orderBy('name', 'asc')->findAll(),
         ];
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->withMethod('post')) {
             //
             // A form was submitted. Let's see what it was...
             //
@@ -135,16 +134,16 @@ class PermissionController extends BaseController
         $permissions = model(PermissionModel::class);
         if (!$permission = $permissions->where('id', $id)->first()) return redirect()->to('permissions');
 
-        $permGroups = $permissions->getGroupsForPermission($id);
-        $permRoles = $permissions->getRolesForPermission($id);
-        $permUsers = $permissions->getUsersForPermission($id);
+        $permGroups             = $permissions->getGroupsForPermission($id);
+        $permRoles              = $permissions->getRolesForPermission($id);
+        $permUsers              = $permissions->getUsersForPermission($id);
 
         return $this->_render($this->config->views['permissionsEdit'], [
-            'config' => $this->config,
-            'permission' => $permission,
-            'permGroups' => $permGroups,
-            'permRoles' => $permRoles,
-            'permUsers' => $permUsers,
+            'config'            => $this->config,
+            'permission'        => $permission,
+            'permGroups'        => $permGroups,
+            'permRoles'         => $permRoles,
+            'permUsers'         => $permUsers,
         ]);
     }
 
@@ -164,14 +163,22 @@ class PermissionController extends BaseController
         //
         // Validate input
         //
-        $rules = $permissions->validationRules;
-        if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        $fields['name']                 = strtolower($this->request->getPost('name'));
+        $fields['description']          = $this->request->getPost('description');
+
+        $this->validation->setRules([
+            'name'                      => ['label' => 'Name', 'rules'              => 'required|trim|max_length[255]|lower_alpha_dash_dot|is_unique[auth_permissions.name,id,'.$id.']'],
+            'description'               => ['label' => 'Description', 'rules'       => 'permit_empty|trim|max_length[255]']
+        ]);
 
         //
-        // Save the permission
+        // Save the group
         //
-        $id = $this->auth->updatePermission($id, strtolower($this->request->getPost('name')), $this->request->getPost('description'));
-        if (!$id) return redirect()->back()->withInput()->with('errors', $permissions->errors());
+        if ($this->validation->run($fields) == FALSE) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            $this->auth->updatePermission($id, strtolower($fields['name']), $fields['description']);
+        }
 
         //
         // Success! Go back to permissions list

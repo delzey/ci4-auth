@@ -16,7 +16,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="<?= base_url() ?>/register" method="post">
+                        <form action="<?= base_url('register') ?>" method="post">
                             <?= csrf_field() ?>
                             <input type="hidden" name="firstname" value="">
                             <input type="hidden" name="lastname" value="">
@@ -49,7 +49,7 @@
                             </div>
                         </form>
                         <hr>
-                        <p><?= lang('Auth.login.already_registered') ?> <a class="card-link" href="<?= base_url() ?>/login"><?= lang('Auth.login.sign_in') ?></a></p>
+                        <p><?= lang('Auth.login.already_registered') ?> <a class="card-link" href="<?= base_url('login') ?>"><?= lang('Auth.login.sign_in') ?></a></p>
                     </div>
                 </div>
             </div>

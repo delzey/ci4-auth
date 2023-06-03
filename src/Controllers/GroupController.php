@@ -2,13 +2,10 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\Session\Session;
-
-use CI4\Auth\Config\Auth as AuthConfig;
-use CI4\Auth\Authorization\GroupModel;
-
 use App\Controllers\BaseController;
+use CI4\Auth\Authorization\GroupModel;
+use CI4\Auth\Config\Auth as AuthConfig;
+use CodeIgniter\Session\Session;
 
 class GroupController extends BaseController
 {
@@ -18,6 +15,7 @@ class GroupController extends BaseController
      * @var AuthConfig
      */
     protected $config;
+    protected $validation;
 
     /**
      * @var Session
@@ -33,9 +31,10 @@ class GroupController extends BaseController
         //
         // Most services in this controller require the session to be started
         //
-        $this->session = service('session');
-        $this->config = config('Auth');
-        $this->auth = service('authorization');
+        $this->session          = service('session');
+        $this->config           = config('Auth');
+        $this->auth             = service('authorization');
+        $this->validation       = \Config\Services::validation();
     }
 
     // -------------------------------------------------------------------------
@@ -60,7 +59,7 @@ class GroupController extends BaseController
         }
         $data['groupPermissions'] = $groupPermissions;
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->withMethod('post')) {
             //
             // A form was submitted. Let's see what it was...
             //
@@ -169,7 +168,7 @@ class GroupController extends BaseController
     public function groupsEditDo($id = null)
     {
         $groups = model(GroupModel::class);
-
+        $fields = array();
         //
         // Get the group to edit. If not found, return to groups list page.
         //
@@ -178,17 +177,22 @@ class GroupController extends BaseController
         //
         // Validate input
         //
-        $rules = $groups->validationRules;
-        if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        $fields['name']             = $this->request->getPost('name');
+        $fields['description']      = $this->request->getPost('description');
+
+        $this->validation->setRules([
+            'name'                      => ['label' => 'Group Name', 'rules'          => 'required|trim|max_length[255]|is_unique[auth_groups.name,id,'.$id.']'],
+            'description'               => ['label' => 'Description', 'rules'         => 'permit_empty|trim|max_length[255]']
+        ]);
 
         //
         // Save the group
         //
-        $data = [
-            'name' => $this->request->getPost('name'),
-        ];
-        if (!empty($this->request->getPost('description'))) $data['description'] = $this->request->getPost('description');
-        if (!$groups->update($id, $data)) return redirect()->back()->withInput()->with('errors', $groups->errors());
+        if ($this->validation->run($fields) == FALSE) {
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            $groups->save($fields);
+        }
 
         //
         // Save the permissions given to this group.

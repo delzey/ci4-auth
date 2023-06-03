@@ -59,12 +59,12 @@ class AuthController extends BaseController
         //
         // Most services in this controller require the session to be started
         //
-        $this->session = service('session');
-        $this->config = config('Auth');
-        $this->auth = service('authentication');
-        $this->authorize = service('authorization');
-        $this->tfa = new TwoFactorAuth($this->config->authenticatorTitle);
-        $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
+        $this->session          = service('session');
+        $this->config           = config('Auth');
+        $this->auth             = service('authentication');
+        $this->authorize        = service('authorization');
+        $this->tfa              = new TwoFactorAuth($this->config->authenticatorTitle);
+        $this->passphrase       = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
     }
 
     //-------------------------------------------------------------------------

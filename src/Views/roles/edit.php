@@ -11,7 +11,7 @@
 
             <div class="card-body">
 
-                <form action="<?= base_url() ?>/roles/edit/<?= $role->id ?>" method="post">
+                <form action="<?= base_url('roles/edit/' .$role->id) ?>" method="post">
                     <?= csrf_field() ?>
 
                     <?php
@@ -58,7 +58,7 @@
                     <div class="card">
                         <div class="card-body">
                             <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
-                            <a class="btn btn-secondary float-end" href="<?= base_url() ?>/roles"><?= lang('Auth.btn.cancel') ?></a>
+                            <a class="btn btn-secondary float-end" href="<?= base_url('roles') ?>"><?= lang('Auth.btn.cancel') ?></a>
                         </div>
                     </div>
 

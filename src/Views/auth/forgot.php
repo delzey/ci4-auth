@@ -19,7 +19,7 @@
 
                         <p><?= lang('Auth.login.enter_email_instructions') ?></p>
 
-                        <form action="<?= base_url() ?>/forgot" method="post">
+                        <form action="<?= base_url('forgot') ?>" method="post">
                             <?= csrf_field() ?>
 
                             <div class="mb-3">

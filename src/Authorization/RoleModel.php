@@ -17,8 +17,8 @@ class RoleModel extends Model
     protected $useTimestamps = false;
 
     protected $validationRules = [
-        'name' => 'required|max_length[255]|is_unique[auth_roles.name,name,{name}]',
-        'description' => 'max_length[255]',
+        'name'          => 'required|trim|max_length[255]|is_unique[auth_roles.name,id,{id}]',
+        'description'   => 'permit_empty|trim|max_length[255]',
     ];
     protected $validationMessages = [];
     protected $skipValidation = false;
