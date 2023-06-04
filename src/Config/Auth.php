@@ -406,7 +406,7 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $showCredits = true;
+    public $showCredits = false;
 
     /**
      * ------------------------------------------------------------------------
@@ -418,5 +418,5 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $showReleaseInfo = true;
+    public $showReleaseInfo = false;
 }

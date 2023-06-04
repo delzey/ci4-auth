@@ -2,12 +2,12 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Session\Session;
+
 use App\Controllers\BaseController;
 use CI4\Auth\Config\Auth as AuthConfig;
 use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
-use Config\Validation;
+use CodeIgniter\Session\Session;
 
 class UserController extends BaseController
 {
@@ -23,13 +23,7 @@ class UserController extends BaseController
      */
     protected $session;
 
-    /**
-     * @var Validation
-     */
-    protected $validation;
-
-    protected $authorize;
-
+    //------------------------------------------------------------------------
     /**
      */
     public function __construct()
@@ -40,7 +34,6 @@ class UserController extends BaseController
         $this->session          = service('session');
         $this->config           = config('Auth');
         $this->authorize        = service('authorization');
-        $this->validation       = service('validation');
     }
 
     // ------------------------------------------------------------------------
@@ -329,22 +322,13 @@ class UserController extends BaseController
         //
         if ($this->request->getPost('swi_active')) $user->setAttribute('active', 1);
         else $user->setAttribute('active', 0);
+        $users->update($id, $user);
 
         //
         // Get the Banned switch.
         //
         if ($this->request->getPost('swi_banned')) $user->setAttribute('status', 'banned');
         else $user->setAttribute('status', null);
-
-        //
-        // Make sure that user with ID 1 (admin) is never deactivated or banned.
-        // Disable this if statement if you want that to be allowed.
-        //
-        if ($id == 1) {
-            $user->setAttribute('active', 1);
-            $user->setAttribute('status', null);
-        }
-
         $users->update($id, $user);
 
         //

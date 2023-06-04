@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="col">
                         <?php if (has_permissions('permissions.create')) { ?>
-                            <a href="<?= base_url('permissions/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createPermission') ?></a>
+                            <a href="<?= base_url('ci4auth/permissions/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createPermission') ?></a>
                         <?php } ?>
                     </div>
                     <div class="col">
-                        <?= bs5_searchform(base_url('permissions'), (isset($search)) ? $search : false) ?>
+                        <?= bs5_searchform(base_url('ci4auth/permissions'), (isset($search)) ? $search : false) ?>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
                         <?php foreach ($permissions as $permission) : ?>
 
-                            <form name="form_<?= $permission->id ?>" action="<?= base_url('permissions') ?>" method="post">
+                            <form name="form_<?= $permission->id ?>" action="<?= base_url('ci4auth/permissions') ?>" method="post">
                                 <?= csrf_field() ?>
 
                                 <input name="hidden_id" type="hidden" value="<?= $permission->id ?>">

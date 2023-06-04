@@ -2,15 +2,12 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Controller;
-use CodeIgniter\Session\Session;
-
+use App\Controllers\BaseController;
 use CI4\Auth\Config\Auth as AuthConfig;
 use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
+use CodeIgniter\Session\Session;
 use RobThree\Auth\TwoFactorAuth;
-
-use App\Controllers\BaseController;
 
 class AuthController extends BaseController
 {

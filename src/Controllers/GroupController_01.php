@@ -181,7 +181,7 @@ class GroupController extends BaseController
         $fields['description']      = $this->request->getPost('description');
 
         $this->validation->setRules([
-            'name'                      => ['label' => 'Group Name', 'rules'          => 'required|trim|max_length[255]|is_unique[auth_groups.name,id,'.$id.']'],
+            'name'                      => ['label' => 'Group Name', 'rules'              => 'required|trim|max_length[255]|is_unique[auth_groups.name,id,'.$id.']'],
             'description'               => ['label' => 'Description', 'rules'         => 'permit_empty|trim|max_length[255]']
         ]);
 

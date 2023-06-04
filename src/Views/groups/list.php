@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="col">
                         <?php if (has_permissions('users.create')) { ?>
-                            <a href="<?= base_url('groups/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createGroup') ?></a>
+                            <a href="<?= base_url('ci4auth/groups/create') ?>" class="btn btn-primary"><?= lang('Auth.btn.createGroup') ?></a>
                         <?php } ?>
                     </div>
                     <div class="col">
-                        <?= bs5_searchform(base_url('groups'), (isset($search)) ? $search : false) ?>
+                        <?= bs5_searchform(base_url('ci4auth/groups'), (isset($search)) ? $search : false) ?>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
                         <?php foreach ($groups as $group) : ?>
 
-                            <form name="form_<?= $group->id ?>" action="<?= base_url('groups') ?>" method="post">
+                            <form name="form_<?= $group->id ?>" action="<?= base_url('ci4auth/groups') ?>" method="post">
                                 <?= csrf_field() ?>
 
                                 <input name="hidden_id" type="hidden" value="<?= $group->id ?>">

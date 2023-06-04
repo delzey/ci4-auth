@@ -9,11 +9,13 @@ use CI4\Auth\Entities\User;
 
 class UserModel extends Model
 {
-    protected $table            = 'users';
-    protected $primaryKey       = 'id';
-    protected $returnType       = User::class;
-    protected $useSoftDeletes   = false;
-    protected $allowedFields    = [
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+
+    protected $returnType = User::class;
+    protected $useSoftDeletes = false;
+
+    protected $allowedFields = [
         'email',
         'username',
         'lastname',
@@ -33,9 +35,9 @@ class UserModel extends Model
         'deleted_at',
     ];
 
-    protected $useTimestamps    = true;
+    protected $useTimestamps = true;
 
-    protected $validationRules  = [
+    protected $validationRules = [
         'email'           => 'required|trim|valid_email|is_unique[users.email,id,{id}]',
         'username'        => 'required|trim|alpha_numeric_punct|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
         'firstname'       => 'permit_empty|trim|max_length[120]',
@@ -87,7 +89,6 @@ class UserModel extends Model
     protected $assignRole;
 
     //-------------------------------------------------------------------------
-
     /**
      * If a default role is assigned in Config\Auth, will add this user to that
      * role. Will do nothing if the role cannot be found.
@@ -107,7 +108,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * If a default role is assigned in Config\Auth, will
      * add this user to that role. Will do nothing
@@ -128,7 +128,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Clears the group to assign to newly created users.
      *
@@ -141,7 +140,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Clears the role to assign to newly created users.
      *
@@ -154,11 +152,10 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Creates a user.
      *
-     * @param array $data User data
+     * @param array   $data    User data
      *
      * @return mixed
      */
@@ -182,7 +179,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Deletes a user.
      *
@@ -201,7 +197,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Logs an activation attempt for posterity sake.
      *
@@ -220,11 +215,10 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Logs a password reset attempt for posterity sake.
      *
-     * @param string $email
+     * @param string      $email
      * @param string|null $token
      * @param string|null $ipAddress
      * @param string|null $userAgent
@@ -241,7 +235,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Sets the group to assign when a user is created.
      *
@@ -257,7 +250,6 @@ class UserModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Sets the role to assign any users created.
      *

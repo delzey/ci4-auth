@@ -8,8 +8,12 @@ class RoleModel extends Model
 {
     protected $table = 'auth_roles';
     protected $primaryKey = 'id';
+
     protected $returnType = 'object';
-    protected $allowedFields = ['name', 'description'];
+    protected $allowedFields = [
+        'name', 'description'
+    ];
+
     protected $useTimestamps = false;
 
     protected $validationRules = [
@@ -20,7 +24,6 @@ class RoleModel extends Model
     protected $skipValidation = false;
 
     //-------------------------------------------------------------------------
-
     /**
      * Add a single permission to a single role, by IDs.
      *
@@ -32,15 +35,14 @@ class RoleModel extends Model
     public function addPermissionToRole(int $permissionId, int $roleId)
     {
         $data = [
-            'role_id' => (int)$roleId,
-            'permission_id' => (int)$permissionId,
+            'role_id'         => (int)$roleId,
+            'permission_id'   => (int)$permissionId,
         ];
 
         return $this->db->table('auth_roles_permissions')->insert($data);
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Adds a single user to a single role.
      *
@@ -56,19 +58,18 @@ class RoleModel extends Model
         cache()->delete("{$userId}_permissions");
 
         $data = [
-            'user_id' => (int)$userId,
-            'role_id' => (int)$roleId
+            'user_id'  => (int) $userId,
+            'role_id' => (int) $roleId
         ];
 
-        return (bool)$this->db->table('auth_roles_users')->insert($data);
+        return (bool) $this->db->table('auth_roles_users')->insert($data);
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Deletes a role.
      *
-     * @param int $id Role ID
+     * @param int  $id   Role ID
      *
      * @return bool
      */
@@ -83,7 +84,6 @@ class RoleModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Gets all permissions for a role in a way that can be
      * easily used to check against:
@@ -115,7 +115,6 @@ class RoleModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Returns an array of all roles that a user is a member of.
      *
@@ -139,7 +138,6 @@ class RoleModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Returns an array of all users that are members of a role.
      *
@@ -164,7 +162,6 @@ class RoleModel extends Model
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Removes all permission from a single role.
      *
@@ -178,7 +175,6 @@ class RoleModel extends Model
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Removes a single permission from a single role.
      *
@@ -191,13 +187,12 @@ class RoleModel extends Model
     {
         return $this->db->table('auth_roles_permissions')
             ->where([
-                'permission_id' => $permissionId,
-                'role_id' => $roleId
+                'permission_id'   => $permissionId,
+                'role_id'         => $roleId
             ])->delete();
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Removes a single permission from all roles.
      *
@@ -211,7 +206,6 @@ class RoleModel extends Model
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Removes a single user from a single role.
      *
@@ -226,11 +220,10 @@ class RoleModel extends Model
         cache()->delete("{$userId}_roles");
         cache()->delete("{$userId}_permissions");
 
-        return $this->db->table('auth_roles_users')->where(['user_id' => $userId, 'role_id' => (int)$roleId])->delete();
+        return $this->db->table('auth_roles_users')->where(['user_id'  => $userId, 'role_id' => (int) $roleId])->delete();
     }
 
     //-------------------------------------------------------------------------
-
     /**
      * Removes a single user from all roles.
      *
