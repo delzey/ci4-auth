@@ -15,12 +15,16 @@ class RoleController extends BaseController
      * @var AuthConfig
      */
     protected $config;
-    protected $validation;
 
     /**
      * @var Session
      */
     protected $session;
+
+    /**
+     * @var Validation
+     */
+    protected $validation;
 
     //-------------------------------------------------------------------------
 
@@ -31,10 +35,10 @@ class RoleController extends BaseController
         //
         // Most services in this controller require the session to be started
         //
-        $this->session = service('session');
-        $this->config = config('Auth');
-        $this->auth = service('authorization');
-        $this->validation       = \Config\Services::validation();
+        $this->session      = service('session');
+        $this->config       = config('Auth');
+        $this->auth         = service('authorization');
+        $this->validation   = service('validation');
     }
 
     // -------------------------------------------------------------------------
@@ -42,16 +46,16 @@ class RoleController extends BaseController
     /**
      * Shows all role records.
      *
-     * @return void
+     * @return \CodeIgniter\HTTP\RedirectResponse | string
      */
     public function roles()
     {
-        $roles = model(RoleModel::class);
-        $allRoles = $roles->orderBy('name', 'asc')->findAll();
+        $roles          = model(RoleModel::class);
+        $allRoles       = $roles->orderBy('name', 'asc')->findAll();
 
         $data = [
-            'config' => $this->config,
-            'roles' => $allRoles,
+            'config'    => $this->config,
+            'roles'     => $allRoles,
         ];
 
         foreach ($allRoles as $role) {
@@ -110,25 +114,53 @@ class RoleController extends BaseController
     public function rolesCreateDo()
     {
         $roles = model(RoleModel::class);
+        $form = array();
+
+        //
+        // Get form fields
+        //
+        $form['name'] = $this->request->getPost('name');
+        $form['description'] = $this->request->getPost('description');
+
+        //
+        // Set validation rules for adding a new role
+        //
+        $validationRules = [
+            'name' => [
+                'label' => lang('Auth.role.name'),
+                'rules' => 'required|trim|max_length[255]|is_unique[auth_roles.name]',
+                'errors' => [
+                    'is_unique' => lang('Auth.role.not_unique', [$form['name']])
+                ]
+            ],
+            'description' => [
+                'label' => lang('Auth.role.description'),
+                'rules' => 'permit_empty|trim|max_length[255]'
+            ]
+        ];
 
         //
         // Validate input
         //
-        $rules = $roles->validationRules;
+        $this->validation->setRules($validationRules);
+        if ($this->validation->run($form) == FALSE) {
+            //
+            // Return validation error
+            //
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            //
+            // Save the role
+            // Return to Create screen on fail
+            //
+            $id = $this->auth->createRole($this->request->getPost('name'), $this->request->getPost('description'));
+            if (!$id) return redirect()->back()->withInput()->with('errors', $roles->errors());
 
-        if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-
-        //
-        // Save the role
-        // Return to Create screen on fail
-        //
-        $id = $this->auth->createRole($this->request->getPost('name'), $this->request->getPost('description'));
-        if (!$id) return redirect()->back()->withInput()->with('errors', $roles->errors());
-
-        //
-        // Success! Go back to user list
-        //
-        return redirect()->route('roles')->with('success', lang('Auth.role.create_success', [$this->request->getPost('name')]));
+            //
+            // Success! Go back to role list
+            //
+            return redirect()->route('roles')->with('success', lang('Auth.role.create_success', [$this->request->getPost('name')]));
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -160,7 +192,8 @@ class RoleController extends BaseController
      */
     public function rolesEditDo($id = null)
     {
-        $roles = model(RoleModel::class);
+        $roles          = model(RoleModel::class);
+        $fields         = array();
 
         //
         // Get the role to edit. If not found, return to roles list page.
@@ -168,7 +201,7 @@ class RoleController extends BaseController
         if (!$role = $roles->where('id', $id)->first()) return redirect()->to('roles');
 
         //
-        // Validate input
+        // Set basic validation rules for editing an existing role.
         //
         $fields['name']                 = $this->request->getPost('name');
         $fields['description']          = $this->request->getPost('description');
@@ -212,7 +245,7 @@ class RoleController extends BaseController
      * @param string $view
      * @param array $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {

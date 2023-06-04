@@ -10,7 +10,6 @@ class GroupModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'object';
     protected $allowedFields = ['name', 'description'];
-
     protected $useTimestamps = false;
 
     protected $validationRules = [
@@ -30,6 +29,7 @@ class GroupModel extends Model
     protected $skipValidation = false;
 
     //-------------------------------------------------------------------------
+
     /**
      * Add a single permission to a single group, by IDs.
      *
@@ -41,7 +41,7 @@ class GroupModel extends Model
     public function addPermissionToGroup(int $permissionId, int $groupId)
     {
         $data = [
-            'group_id'      => (int)$groupId,
+            'group_id' => (int)$groupId,
             'permission_id' => (int)$permissionId,
         ];
 
@@ -49,6 +49,7 @@ class GroupModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Adds a single user to a single group.
      *
@@ -64,18 +65,19 @@ class GroupModel extends Model
         cache()->delete("{$userId}_permissions");
 
         $data = [
-            'user_id'  => (int) $userId,
-            'group_id' => (int) $groupId
+            'user_id' => (int)$userId,
+            'group_id' => (int)$groupId
         ];
 
-        return (bool) $this->db->table('auth_groups_users')->insert($data);
+        return (bool)$this->db->table('auth_groups_users')->insert($data);
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Deletes a group.
      *
-     * @param int  $id   Group ID
+     * @param int $id Group ID
      *
      * @return bool
      */
@@ -90,6 +92,7 @@ class GroupModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Returns an array of all groups that a user is a member of.
      *
@@ -113,6 +116,7 @@ class GroupModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Gets all permissions for a group in a way that can be
      * easily used to check against:
@@ -144,6 +148,7 @@ class GroupModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Returns an array of all users that are members of a group.
      *
@@ -168,6 +173,7 @@ class GroupModel extends Model
     }
 
     //--------------------------------------------------------------------
+
     /**
      * Removes a single permission from a single group.
      *
@@ -181,11 +187,12 @@ class GroupModel extends Model
         return $this->db->table('auth_groups_permissions')
             ->where([
                 'permission_id' => $permissionId,
-                'group_id'      => $groupId
+                'group_id' => $groupId
             ])->delete();
     }
 
     //--------------------------------------------------------------------
+
     /**
      * Removes all permissions from a single group.
      *
@@ -199,6 +206,7 @@ class GroupModel extends Model
     }
 
     //--------------------------------------------------------------------
+
     /**
      * Removes a single permission from all groups.
      *
@@ -212,6 +220,7 @@ class GroupModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Removes a single user from a single group.
      *
@@ -226,10 +235,11 @@ class GroupModel extends Model
         cache()->delete("{$userId}_groups");
         cache()->delete("{$userId}_permissions");
 
-        return $this->db->table('auth_groups_users')->where(['user_id'  => $userId, 'group_id' => (int) $groupId])->delete();
+        return $this->db->table('auth_groups_users')->where(['user_id' => $userId, 'group_id' => (int)$groupId])->delete();
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Removes a single user from all groups.
      *

@@ -2,8 +2,6 @@
 
 namespace CI4\Auth\Authorization;
 
-// use CodeIgniter\Database\BaseResult;
-// use CodeIgniter\Database\Query;
 use CodeIgniter\Model;
 
 class PermissionModel extends Model
@@ -11,11 +9,7 @@ class PermissionModel extends Model
     protected $table = 'auth_permissions';
     protected $primaryKey = 'id';
     protected $returnType = 'object';
-
-    protected $allowedFields = [
-        'name', 'description'
-    ];
-
+    protected $allowedFields = ['name', 'description'];
     protected $useTimestamps = false;
 
     protected $validationRules = [
@@ -24,13 +18,14 @@ class PermissionModel extends Model
     ];
 
     //-------------------------------------------------------------------------
+
     /**
      * Adds a single permission to a single user.
      *
      * @param int $permissionId
      * @param int $userId
      *
-     * @return BaseResult|Query|false
+     * @return bool
      */
     public function addPermissionToUser(int $permissionId, int $userId)
     {
@@ -43,10 +38,11 @@ class PermissionModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Deletes a permission.
      *
-     * @param int  $id   Permission ID
+     * @param int $id Permission ID
      *
      * @return bool
      */
@@ -61,6 +57,7 @@ class PermissionModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Checks if a user has a specific permission (personal, group, role).
      *
@@ -110,7 +107,7 @@ class PermissionModel extends Model
      *  id => name
      * ]
      *
-     * @param int     $userId
+     * @param int $userId
      *
      * @return array
      */
@@ -171,7 +168,7 @@ class PermissionModel extends Model
      *  id => name
      * ]
      *
-     * @param int     $userId
+     * @param int $userId
      *
      * @return array
      */
@@ -202,7 +199,7 @@ class PermissionModel extends Model
     /**
      * Gets all groups that have a single permission assigned.
      *
-     * @param int     $permId  Permission ID to check
+     * @param int $permId Permission ID to check
      *
      * @return array
      */
@@ -233,7 +230,7 @@ class PermissionModel extends Model
     /**
      * Gets all groups that have a single permission assigned.
      *
-     * @param int     $permId  Permission ID to check
+     * @param int $permId Permission ID to check
      *
      * @return array
      */
@@ -264,7 +261,7 @@ class PermissionModel extends Model
     /**
      * Gets all users that hold a single personal permission.
      *
-     * @param int     $permId  Permission ID to check
+     * @param int $permId Permission ID to check
      *
      * @return array
      */
@@ -293,13 +290,12 @@ class PermissionModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Removes a permission from a user.
      *
      * @param int $permissionId
      * @param int $userId
-     *
-     * @return mixed
      */
     public function removePermissionFromUser(int $permissionId, int $userId)
     {
@@ -308,12 +304,11 @@ class PermissionModel extends Model
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Removes all permissions from a user.
      *
      * @param int $userId
-     *
-     * @return mixed
      */
     public function removeAllPermissionsFromUser(int $userId)
     {

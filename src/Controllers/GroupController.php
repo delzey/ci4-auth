@@ -22,6 +22,11 @@ class GroupController extends BaseController
      */
     protected $session;
 
+    /**
+     * @var Validation
+     */
+    protected $validation;
+
     //-------------------------------------------------------------------------
 
     /**
@@ -117,25 +122,53 @@ class GroupController extends BaseController
     public function groupsCreateDo()
     {
         $groups = model(GroupModel::class);
+        $form = array();
+
+        //
+        // Get form fields
+        //
+        $form['name'] = $this->request->getPost('name');
+        $form['description'] = $this->request->getPost('description');
+
+        //
+        // Set validation rules for adding a new group
+        //
+        $validationRules = [
+            'name' => [
+                'label' => lang('Auth.group.name'),
+                'rules' => 'required|trim|max_length[255]|is_unique[auth_groups.name]',
+                'errors' => [
+                    'is_unique' => lang('Auth.group.not_unique', [$form['name']])
+                ]
+            ],
+            'description' => [
+                'label' => lang('Auth.group.description'),
+                'rules' => 'permit_empty|trim|max_length[255]'
+            ]
+        ];
 
         //
         // Validate input
         //
-        $rules = $groups->validationRules;
+        $this->validation->setRules($validationRules);
+        if ($this->validation->run($form) == FALSE) {
+            //
+            // Return validation error
+            //
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            //
+            // Save the group
+            // Return to Create screen on fail
+            //
+            $id = $this->auth->createGroup($this->request->getPost('name'), $this->request->getPost('description'));
+            if (!$id) return redirect()->back()->withInput()->with('errors', $groups->errors());
 
-        if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-
-        //
-        // Save the group
-        // Return to Create screen on fail
-        //
-        $id = $this->auth->createGroup($this->request->getPost('name'), $this->request->getPost('description'));
-        if (!$id) return redirect()->back()->withInput()->with('errors', $groups->errors());
-
-        //
-        // Success! Go back to user list
-        //
-        return redirect()->route('groups')->with('success', lang('Auth.group.create_success', [$this->request->getPost('name')]));
+            //
+            // Success! Go back to user list
+            //
+            return redirect()->route('groups')->with('success', lang('Auth.group.create_success', [$this->request->getPost('name')]));
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -175,7 +208,7 @@ class GroupController extends BaseController
         if (!$group = $groups->where('id', $id)->first()) return redirect()->to('groups');
 
         //
-        // Validate input
+        // Set basic validation rules for editing an existing group.
         //
         $fields['name']             = $this->request->getPost('name');
         $fields['description']      = $this->request->getPost('description');
@@ -195,20 +228,55 @@ class GroupController extends BaseController
         }
 
         //
-        // Save the permissions given to this group.
-        // First, delete all permissions, then add each selected one.
+        // Get form fields
         //
-        $groups->removeAllPermissionsFromGroup((int)$id);
-        if (array_key_exists('sel_permissions', $this->request->getPost())) {
-            foreach ($this->request->getPost('sel_permissions') as $perm) {
-                $groups->addPermissionToGroup($perm, $id);
-            }
+        $form['name'] = $this->request->getPost('name');
+        $form['description'] = $this->request->getPost('description');
+
+        //
+        // If the group name changed, make sure the validator checks its uniqueness.
+        //
+        if ($form['name'] != $group->name) {
+            $validationRules['name'] = [
+                'label' => lang('Auth.group.name'),
+                'rules' => 'required|trim|max_length[255]|is_unique[auth_groups.name]',
+                'errors' => [
+                    'is_unique' => lang('Auth.group.not_unique', [$form['name']])
+                ]
+            ];
         }
 
         //
-        // Success! Go back to groups list
+        // Validate input
         //
-        return redirect()->back()->withInput()->with('success', lang('Auth.group.update_success', [$group->name]));
+        $this->validation->setRules($validationRules);
+        if ($this->validation->run($form) == FALSE) {
+            //
+            // Return validation error
+            //
+            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+        } else {
+            //
+            // Save the group name and description
+            //
+            $groups->update($id, $form);
+
+            //
+            // Now, save the permissions given to this group.
+            // First, delete all permissions, then add each selected one.
+            //
+            $groups->removeAllPermissionsFromGroup((int)$id);
+            if (array_key_exists('sel_permissions', $this->request->getPost())) {
+                foreach ($this->request->getPost('sel_permissions') as $perm) {
+                    $groups->addPermissionToGroup($perm, $id);
+                }
+            }
+
+            //
+            // Success! Go back to groups list
+            //
+            return redirect()->back()->withInput()->with('success', lang('Auth.group.update_success', [$group->name]));
+        }
     }
 
     //-------------------------------------------------------------------------
